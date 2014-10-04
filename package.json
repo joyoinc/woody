@@ -1,0 +1,10 @@
+
+{
+  "name": "woody-demo",
+  "description": "web app to demo wood market",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "4.x"
+  }
+}
