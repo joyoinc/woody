@@ -1,0 +1,14 @@
+html
+  head
+    title!= title
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/my.css')
+    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
+    script(type='text/javascript', src='http://code.jquery.com/jquery.js')
+    script(type='text/javascript', src='/js/holder.js')
+    script(type='text/javascript', src='/js/my.js')
+  body
+    h1!= text1
+      img#show-tile(src!= imgurl)
+      button#apply-to-wall-btn.btn.btn-primary Apply
+    div#show-wall
