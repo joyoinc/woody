@@ -14,7 +14,7 @@ app.get('/db', function(req, res) {
         console.error(err);
         return;
       }
-    client.query('SELECT * FROM test_table', function(err, result) {
+    client.query('SELECT * FROM cfg_table WHERE key LIKE \'/tables/tbl_%\'', function(err, result) {
       done();
       if(err) {
         console.error(err);

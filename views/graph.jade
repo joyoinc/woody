@@ -1,0 +1,15 @@
+html
+  head
+    title!= title
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
+    script(type='text/javascript', src='http://code.jquery.com/jquery.js')
+    script(type='text/javascript', src='http://code.createjs.com/easeljs-0.7.0.min.js')
+    script.
+      function init() {
+        var stage = new createjs.Stage("demoCanvas")
+        stage.addChild(new createjs.Shape()).setTransform(100,100).graphics.f("orange").dc(0,0,50)
+        stage.update()
+      }
+  body(onload="init();")
+    canvas#demoCanvas(width=500, height=300)

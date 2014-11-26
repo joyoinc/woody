@@ -20,4 +20,18 @@ $(document).ready(function(){
     }
   });
 
+  $('.next-stat-btn').click(function(){ 
+    var btn = $(this);
+    var baseurl = '/tile/' + itemid;
+    var nxtid = $(this).attr('gotostat');
+    $.ajax({
+      url: baseurl + '/' + nxtid,
+      type: 'put'
+    }).done(function(data, textStatus, jqXHR){
+        if(textStatus==='success') {
+          alert('状态改变成功');
+          window.location.href = baseurl;
+        }
+    });
+  });
 });
