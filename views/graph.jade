@@ -6,15 +6,15 @@ html
     script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
     script(type='text/javascript', src='http://code.createjs.com/easeljs-0.7.0.min.js')
     script(type='text/javascript', src='/js/graph.js')
+
     style.
       .row > .btn { margin-top: 5px; margin-bottom: 5px; }
+
     script.
       var stage;
       var sourceVertex;
-      var connection;
       var vertexes = [{"id":3,"name":"系统保留态3"},{"id":4,"name":"系统保留态4"},{"id":5,"name":"系统保留态5"},{"id":6,"name":"系统保留态6"},{"id":7,"name":"系统保留态7"},{"id":8,"name":"系统保留态8"},{"id":9,"name":"系统保留态9"},{"id":10,"name":"未命名态1"},{"id":11,"name":"未命名态2"},{"id":1,"name":"初始态"},{"id":2,"name":"终止态"}];
       var edges = [ {"source":1,"sink":10}, {"source":10,"sink":11}, {"source":11,"sink":2}, {"source":1,"sink":2} ];
-
 
       function init() {
         stage = new createjs.Stage("demoCanvas")
@@ -22,15 +22,13 @@ html
 
         // sample vertex
         for(var i=0; i<vertexes.length; i++) {
-           stage.addChild(new GraphVertex({
-            vertexId:vertexes[i].id,
-            label:vertexes[i].name, 
-            pos:{x:Math.random()*800, y:Math.random()*600} }));
+          drawGraphVertex(vertexes[i].id, vertexes[i].name,
+          {x:Math.random()*600,y:Math.random()*450});
         }
 
         // sample edge
         for(var i=0; i<edges.length; i++) {
-          drawEdge(edges[i].source, edges[i].sink);
+          drawGraphEdge(edges[i].source, edges[i].sink);
         }
 
         // sample curve edge
