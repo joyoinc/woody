@@ -22,15 +22,14 @@ $(document).ready(function(){
 
   $('.next-stat-btn').click(function(){ 
     var btn = $(this);
-    var baseurl = '/tile/' + itemid;
     var nxtid = $(this).attr('gotostat');
     $.ajax({
-      url: baseurl + '/' + nxtid,
+      url: String.format("/_api/updateTileStatus/{0}/{1}", itemid, nxtid),
       type: 'put'
     }).done(function(data, textStatus, jqXHR){
         if(textStatus==='success') {
-          alert('状态改变成功');
-          window.location.href = baseurl;
+          console.log(String.format("ajax call: updateTileStatus {0}!" , data.result));
+          window.location.href = String.format("/tile/{0}", itemid);
         }
     });
   });

@@ -152,7 +152,7 @@ function startDrawEdgeHandler (evt) {
   stage.addChild(new createjs.Shape().set({
     x: evt.currentTarget.x,
     y: evt.currentTarget.y,
-    graphics: new createjs.Graphics().s("#0f0").dc(0,0,10),
+    graphics: new createjs.Graphics().s("#f00").dc(0,0,10),
     name: "tmpEdge"
   }));
   stage.addEventListener("stagemousemove", tmpDrawEdgeHandler);
@@ -179,7 +179,10 @@ function endDrawEdgeHandler (evt) {
   if(sinkVertex != null) {
     var sourceId = sourceVertex.vertexId;
     var sinkId = sinkVertex.vertexId;
-    if(hasEdge(edges, sourceId, sinkId)) {
+    if(sourceId==sinkId) {
+      console.log("can't add loop " + sinkId + " to itself!");
+    }
+    else if(hasEdge(edges, sourceId, sinkId)) {
       console.log(sourceId + "->" + sinkId + ": exists!");
     } else {
       drawGraphEdge(sourceId, sinkId);
@@ -228,7 +231,20 @@ $(document).ready(function(){
     if(btn) $(btn).addClass('active');
   };
 
-  $('.btn#save').click(function(){ toggleBtn(); });
+  $('.btn#save').click(function(){ 
+    toggleBtn(); 
+
+    $.ajax({
+      url: '/graph',
+      type: 'put'
+    }).done(function(data, textStatus, jqXHR){
+        if(textStatus==='success') {
+          alert('状态改变成功');
+          window.location.href = baseurl;
+        }
+    });
+
+  });
 
   $('.btn#editEdge').click(function(){ 
     var btn = $(this);
@@ -236,6 +252,10 @@ $(document).ready(function(){
 
     stage.children.forEach(function(elem){
       if(elem.name=="wfGraph_vertex") {
+        elem.removeAllEventListeners();
+        elem.on("mousedown", startDrawEdgeHandler);
+      }
+      if(elem.name=="wfGraph_edge") {
         elem.removeAllEventListeners();
         elem.on("mousedown", startDrawEdgeHandler);
       }
