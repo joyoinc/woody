@@ -1,6 +1,5 @@
 // to do
 var config = require('./config.js');
-var pg = require('pg').native;
 var cloudinaryImages = [
   'http://res.cloudinary.com/dehrl9peq/image/upload/v1412466618/descxcxtwaudgutnjqvr.png',
   'http://res.cloudinary.com/dehrl9peq/image/upload/v1412473296/kzc7nldt9t54oehd8ftp.png'

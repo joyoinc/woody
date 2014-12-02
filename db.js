@@ -2,14 +2,14 @@ var config = require('./config')
 // Module dependencies.
 var express = require('express');
 var app = express();
-var pg = require('pg').native;
-//var CONNSTRING = process.env.DATABASE_URL || 'postgres://ulldcqzkmyglth:480S6ABz_YURJ4ZMCPJyG5IBgr@ec2-50-17-207-54.compute-1.amazonaws.com:5432/dcu31opgd9pq74';
+var pg = require('pg');
 
 // all environments
 app.set('port', process.env.PORT || 9527);
 
 app.get('/db', function(req, res) {
-  pg.connect(config.connString, function(err, client, done){
+  //pg.connect(config.connString, function(err, client, done){
+  pg.connect(config.connConfig, function(err, client, done){
       if(err) {
         console.error(err);
         return;
@@ -27,7 +27,8 @@ app.get('/db', function(req, res) {
 });
 
 app.get('/db/:tableName', function(req, res) {
-  pg.connect(config.connString, function(err, client, done){
+  //pg.connect(config.connString, function(err, client, done){
+  pg.connect(config.connConfig, function(err, client, done){
     if(err) {
       return console.error('error fetching client from pool', err);
     }
