@@ -6,7 +6,7 @@
   var GraphVertex = function(vertexId) { 
     var default_config = {
       label : "default_Label",
-      color : "#777",
+      color : createjs.Graphics.getRGB(Math.random()*0xFFFFFF),
       pos : {x:0,y:0}
     }
     var configs = {};
@@ -225,57 +225,91 @@ function drawGraphVertex(vertexId, label, pos) {
   stage.addChild(new GraphVertex(vertexId, {label: label, pos:pos}));
 }
 
+function drawGraph(vertexes, edges) {
+  var elem;
+  for(var i=0; i<vertexes.length; i++) {
+    elem = vertexes[i];
+    drawGraphVertex(elem.source, elem.label,
+        {x:Math.random()*600,y:Math.random()*450});
+  }
+
+  for(var i=0; i<edges.length; i++) {
+    elem = edges[i];
+    drawGraphEdge(elem.source, elem.sink);
+  }
+}
+
+function resetEventHandlerAndButton() {
+  stage.children.forEach(function(elem){
+    elem.removeAllEventListeners();
+  });
+  $('.btn.active').removeClass('active');
+};
+
 $(document).ready(function(){
-  var toggleBtn = function(btn){ 
-    $('.btn.active').removeClass('active');
-    if(btn) $(btn).addClass('active');
-  };
+
+  $.ajax({
+    url: "/_api/loadGraph",
+    type: 'get'
+  }).done(function(data, textStatus, jqXHR){
+      if(textStatus==='success') {
+        console.log(String.format("ajax call: loadGraph {0}!" , data.result));
+        vertexes = []; edges = [];
+        for(var i=0; i<data.graph.length; i++) {
+          if(data.graph[i].type=='V') {
+            vertexes.push(data.graph[i]);
+          }
+          if(data.graph[i].type=='E') {
+            edges.push(data.graph[i]);
+          }
+        }
+        drawGraph(vertexes, edges);
+      }
+  });
 
   $('.btn#save').click(function(){ 
-    toggleBtn(); 
-
-    $.ajax({
-      url: '/graph',
-      type: 'put'
-    }).done(function(data, textStatus, jqXHR){
-        if(textStatus==='success') {
-          alert('状态改变成功');
-          window.location.href = baseurl;
-        }
+    $.ajax({ url: '/graph', type: 'put' })
+    .done(function(data, textStatus, jqXHR){
+      if(textStatus==='success') {
+        console.log(String.format("ajax call: saveGraph {0}!" , data.result));
+        $('#myModal .modal-body').html(String.format("<div class='alert {1}'>{0}</div>",
+          data.result, data.result=="success" ? "alert-info" : "alert-danger"));
+        setTimeout(function(){
+          $('#myModal .modal-body').html("");
+          $('button.close').click(); 
+        }, 500);
+      }
     });
+  });
 
+  $('.btn#preSave').click(function(){ 
+    resetEventHandlerAndButton(); 
   });
 
   $('.btn#editEdge').click(function(){ 
     var btn = $(this);
     if($(btn).hasClass('active')) return;
 
+    resetEventHandlerAndButton();
     stage.children.forEach(function(elem){
       if(elem.name=="wfGraph_vertex") {
-        elem.removeAllEventListeners();
-        elem.on("mousedown", startDrawEdgeHandler);
-      }
-      if(elem.name=="wfGraph_edge") {
-        elem.removeAllEventListeners();
         elem.on("mousedown", startDrawEdgeHandler);
       }
     });
-
-    toggleBtn(btn);
+    $(btn).addClass('active');
   });
 
   $('.btn#editVertex').click(function(){ 
     var btn = $(this);
     if($(btn).hasClass('active')) return;
 
+    resetEventHandlerAndButton();
     stage.children.forEach(function(elem){
       if(elem.name=="wfGraph_vertex") {
-        elem.removeAllEventListeners();
         elem.on("pressmove", elem.dragHandler);
         elem.on("pressup", elem.dropHandler);
       }
     });
-
-    toggleBtn(btn);
+    $(btn).addClass('active');
   });
 });

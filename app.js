@@ -40,6 +40,7 @@ app.get('/tile/:id', routeTile.getTile);
 
 var routeAPI = require('./routes/_api');
 app.put('/_api/updateTileStatus/:id/:stat', routeAPI.updateTileStatus);
+app.get('/_api/loadGraph', routeGraph.loadGraph);
 
 var server = app.listen(app.get('port'), function(){
   console.log('Server listening on port ' + server.address().port);

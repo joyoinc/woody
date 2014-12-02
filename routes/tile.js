@@ -17,7 +17,8 @@ exports.getTile = function(req, res) {
                 FROM    tbl_graphE e \
                         JOIN  tbl_graphV v ON(v.id = e.sink) \
               ) nxt ON (nxt.vid = i.status)  \
-      WHERE   i.typeId=1 AND i.itemId=$1";
+      WHERE   i.typeId=1 AND i.itemId=$1 \
+    ";
 
     client.query(sqlCmd, [itemid], function(err, result) {
       done();
