@@ -15,5 +15,7 @@ CREATE TABLE cfg_table (
 
 
 -- group all delta scripts order by date
-\i sql/delta/2014-10-5.sql
-\i sql/delta/2014-11-25.sql
+\i sql/table/2014-10-5.sql
+\i sql/data/2014-10-5.sql
+\i sql/table/2014-11-25.sql
+\i sql/data/2014-11-25.sql

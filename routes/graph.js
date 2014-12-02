@@ -1,8 +1,8 @@
 var config = require('../config.js');
-var pg = require('pg').native;
+var pg = require('pg');
 
 exports.loadGraph = function (req, res) {
-  pg.connect(config.connString, function(err, client, done){
+  pg.connect(config.connConfig, function(err, client, done){
     if(err) {
       console.error('error fetching client from pool', err);
       res.send({"result":"fail", "detail":err});

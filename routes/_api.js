@@ -1,10 +1,10 @@
 var config = require('../config.js');
-var pg = require('pg').native;
+var pg = require('pg');
 
 exports.updateTileStatus = function(req, res) {
   var id = req.params.id;
   var sid = req.params.stat;
-  pg.connect(config.connString, function(err, client, done){
+  pg.connect(config.connConfig, function(err, client, done){
     if(err) {
       console.error('error fetching client from pool', err);
       res.send({"result":"fail", "detail":err});

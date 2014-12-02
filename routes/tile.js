@@ -1,9 +1,9 @@
 var config = require('../config.js');
-var pg = require('pg').native;
+var pg = require('pg');
 
 exports.getTile = function(req, res) {
   var itemid = req.params.id;
-  pg.connect(config.connString, function(err, client, done){
+  pg.connect(config.connConfig, function(err, client, done){
     if(err) {
       return console.error('error fetching client from pool', err);
     }
