@@ -14,5 +14,5 @@ INSERT INTO cfg_table(key) VALUES ('/tables/tbl_graphE');
 
 -- alter table item
 ALTER TABLE tbl_item ADD COLUMN status smallint DEFAULT 0;
-UPDATE tbl_item SET (status) = (1) WHERE itemid = 3;
+
 
