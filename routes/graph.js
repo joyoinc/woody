@@ -1,5 +1,6 @@
 var config = require('../config.js');
 var pg = require('pg');
+var util = require('util');
 
 exports.loadGraph = function (req, res) {
   pg.connect(config.connConfig, function(err, client, done){
@@ -48,7 +49,43 @@ exports.showGraph = function(req, res) {
 }
 
 exports.saveGraph = function(req, res) {
-  var i = Math.random() * 10 < 8;
-  res.send({"result": i ? "success":"fail"});
+  var edges = req.param('edges');
+
+  var sqlInsertEdges = "INSERT INTO tbl_graphE(source, sink) VALUES ";
+  for(var i=0; i<edges.length; i++) {
+    var edge = edges[i];
+    var str = util.format("(%d, %d)%s", edge.source, edge.sink, i==edges.length-1 ? ";":",");
+    sqlInsertEdges += str;
+  }
+  //res.send(sqlInsertEdges);
+
+  var rollback = function(client, done) {
+    client.query('ROLLBACK', function(err) {
+      console.error('run transac error, rollback.', err);
+      res.send({"result":"fail", "detail":err});
+      return done(err);
+    });
+  }
+  pg.connect(config.connConfig, function(err, client, done){
+    if(err) {
+      console.error('error fetching client from pool', err);
+      res.send({"result":"fail", "detail":err});
+      return;
+    }
+
+    client.query('BEGIN', function(err){
+      if(err) return rollback(client, done);
+      process.nextTick(function(){
+        client.query("DELETE FROM tbl_graphE", function(err){
+          if(err) return rollback(client, done);
+          client.query(sqlInsertEdges, function(err){
+            if(err) return rollback(client, done);
+            client.query('COMMIT', done);
+            res.send({"result":"success"});
+          });
+        });
+      });
+    });
+  });
 }
 

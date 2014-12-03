@@ -17,6 +17,8 @@ html
       button#apply-to-wall-btn.btn.btn-primary Apply
       if currentstat
         h2 #{currentstat}
-        each nextstat in nextstats
-          button.next-stat-btn.btn.btn-info(gotostat!= nextstat.id) #{nextstat.name}
+        div.btn-group
+          each nextstat in nextstats
+            if nextstat.id
+              button.next-stat-btn.btn.btn-default(gotostat!= nextstat.id) #{nextstat.name}
     div#show-wall

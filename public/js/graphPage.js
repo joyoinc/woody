@@ -330,11 +330,15 @@ $(document).ready(function(){
   });
 
   $('.btn#save').click(function(){ 
+    var graph = {vertexes:[],edges:[]};
     stage.children.forEach(function(elem){
       console.log('graph element: '+ elem.toString());
+      if(elem.name=="wfGraph_edge") {
+        graph.edges.push({source:elem.sourceVertex.vertexId, sink:elem.sinkVertex.vertexId});
+      }
     });
 
-    $.ajax({ url: '/graph', type: 'put' })
+    $.ajax({ url: '/graph', type: 'put', data: JSON.stringify(graph), contentType:"application/json; charset=utf-8"})
     .done(function(data, textStatus, jqXHR){
       if(textStatus==='success') {
         console.log(String.format("ajax call: saveGraph {0}!" , data.result));

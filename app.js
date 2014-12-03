@@ -10,11 +10,13 @@ var thumbnails = cloudinaryImages;
 
 // Module dependencies.
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());
 app.set('views', './views');
 app.set('view engine', 'jade');
 

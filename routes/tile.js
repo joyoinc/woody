@@ -26,7 +26,6 @@ exports.getTile = function(req, res) {
         console.error('error run query', err);
         res.send(err);
       } else {
-        console.log(result.rows);
         if(result.rows.length > 0) {
           var item = result.rows[0];
           var nextstats = [];
