@@ -18,7 +18,7 @@
       configs: configs,
       vertexId: vertexId,
       cursor: "pointer",
-      alpha: 0.5,
+      alpha: 0.382,
       name: "wfGraph_vertex"
     });
 
@@ -64,13 +64,16 @@
     });
   }
 
+  p.toString = function () {
+    return String.format("({0})", this.configs.label);
+  }
+
   p.dragHandler = function(evt) {
     evt.currentTarget.x = evt.stageX;
     evt.currentTarget.y = evt.stageY;
   }
 
   p.dropHandler = function(evt) {
-    //console.log(this.edges);
     stage.children.forEach(function(elem){
       if(elem.name=="wfGraph_edge") {
         elem.paint();
@@ -99,13 +102,12 @@
       sinkVertex: sinkVertex,
       configs: configs,
       cursor: "pointer",
-      alpha: 0.3,
+      alpha: 0.382,
       name: "wfGraph_edge"
     });
 
     this.initialize(); 
 
-    console.log(sourceVertex.configs.label + "->" + sinkVertex.configs.label);
   }
 
   var p = GraphEdge.prototype = new createjs.Container(); // inherit from Container
@@ -117,6 +119,12 @@
 
     this.addChild(new createjs.Shape());
     this.paint();
+  }
+
+  p.toString = function () {
+    return String.format("{0}->{1}", 
+      this.sourceVertex.configs.label,
+      this.sinkVertex.configs.label);
   }
 
   p.paint = function() {
@@ -146,6 +154,20 @@
 
   window.GraphEdge = GraphEdge;
 }());
+
+function highlightTargetHandler(evt) {
+  evt.currentTarget.set({alpha:0.618});
+}
+
+function delightTargetHandler(evt) {
+  evt.currentTarget.set({alpha:0.382});
+}
+
+function removeEdgeHandler(evt) {
+  var edge = evt.currentTarget;
+  console.log('remove edge ' + edge.toString());
+  stage.removeChild(edge);
+}
 
 function startDrawEdgeHandler (evt) {
   sourceVertex = evt.currentTarget;
@@ -182,11 +204,11 @@ function endDrawEdgeHandler (evt) {
     if(sourceId==sinkId) {
       console.log("can't add loop " + sinkId + " to itself!");
     }
-    else if(hasEdge(edges, sourceId, sinkId)) {
+    else if(hasEdge(sourceId, sinkId)) {
       console.log(sourceId + "->" + sinkId + ": exists!");
     } else {
-      drawGraphEdge(sourceId, sinkId);
-      edges.push({source:sourceId, sink:sinkId});
+      var edge = drawGraphEdge(sourceId, sinkId, "#0f0");
+      addEdgeModeEventHandler([edge]);
     }
   } 
 
@@ -194,35 +216,40 @@ function endDrawEdgeHandler (evt) {
   stage.removeEventListener("stagemouseup", endDrawEdgeHandler);
 }
 
-function hasEdge(edgeArray, sourceId, sinkId) {
-  for(var i=0; i<edgeArray.length; i++) {
-    if(edgeArray[i].source==sourceId && edgeArray[i].sink==sinkId)
+function hasEdge(sourceId, sinkId) {
+  for(var i=0; i<stage.children.length; i++) {
+    var elem = stage.children[i];
+    if(elem.name=="wfGraph_edge" 
+      && elem.sourceVertex.vertexId==sourceId
+      && elem.sinkVertex.vertexId==sinkId)
       return true;
   }
   return false;
 }
 
-function drawGraphEdge(sourceId, sinkId) {
+function drawGraphEdge(sourceId, sinkId, color) {
   var source,sink = null;
-  for(var j=0; j<stage.children.length; j++) {
-    if(stage.children[j].name=="wfGraph_vertex") {
-      if(stage.children[j].vertexId == sourceId) {
-        source = stage.children[j];
+  for(var i=0; i<stage.children.length; i++) {
+    var elem = stage.children[i];
+    if(elem.name=="wfGraph_vertex") {
+      if(elem.vertexId == sourceId) {
+        source = elem;
       }
-      if(stage.children[j].vertexId == sinkId) {
-        sink = stage.children[j];
+      if(elem.vertexId == sinkId) {
+        sink = elem;
       }
       if(source!=null && sink!=null) break;
     }
   }
 
   if(source!=null && sink!=null) {
-    stage.addChild(new GraphEdge(source, sink));
+    return stage.addChild(new GraphEdge(source, sink, {color:color}));
   }
+  return null;
 }
 
 function drawGraphVertex(vertexId, label, pos) {
-  stage.addChild(new GraphVertex(vertexId, {label: label, pos:pos}));
+  return stage.addChild(new GraphVertex(vertexId, {label: label, pos:pos}));
 }
 
 function drawGraph(vertexes, edges) {
@@ -239,12 +266,46 @@ function drawGraph(vertexes, edges) {
   }
 }
 
-function resetEventHandlerAndButton() {
+function addEdgeModeEventHandler(elems) {
+  if(elems==null) {
+    elems = stage.children;
+  }
+  elems.forEach(function(elem){
+    if(elem.name=="wfGraph_vertex") {
+      elem.on("mousedown", startDrawEdgeHandler);
+    }
+    if(elem.name=="wfGraph_edge") {
+      elem.on("mouseover", highlightTargetHandler);
+      elem.on("mouseout", delightTargetHandler);
+      elem.on("dblclick", removeEdgeHandler);
+    }
+  });
+}
+
+function addVertexModeEventHandler(elems) {
+  if(elems==null) {
+    elems = stage.children;
+  }
+  elems.forEach(function(elem){
+    if(elem.name=="wfGraph_vertex") {
+      elem.on("pressmove", elem.dragHandler);
+      elem.on("pressup", elem.dropHandler);
+      elem.on("mouseover", highlightTargetHandler);
+      elem.on("mouseout", delightTargetHandler);
+      //elem.on("dblclick", removeEdgeHandler);
+    }
+  });
+}
+
+function resetButtons() {
+  $('.btn.active').removeClass('active');
+}
+
+function resetEventHandler() {
   stage.children.forEach(function(elem){
     elem.removeAllEventListeners();
   });
-  $('.btn.active').removeClass('active');
-};
+}
 
 $(document).ready(function(){
 
@@ -254,7 +315,7 @@ $(document).ready(function(){
   }).done(function(data, textStatus, jqXHR){
       if(textStatus==='success') {
         console.log(String.format("ajax call: loadGraph {0}!" , data.result));
-        vertexes = []; edges = [];
+        var vertexes = []; var edges = [];
         for(var i=0; i<data.graph.length; i++) {
           if(data.graph[i].type=='V') {
             vertexes.push(data.graph[i]);
@@ -268,6 +329,10 @@ $(document).ready(function(){
   });
 
   $('.btn#save').click(function(){ 
+    stage.children.forEach(function(elem){
+      console.log('graph element: '+ elem.toString());
+    });
+
     $.ajax({ url: '/graph', type: 'put' })
     .done(function(data, textStatus, jqXHR){
       if(textStatus==='success') {
@@ -283,19 +348,17 @@ $(document).ready(function(){
   });
 
   $('.btn#preSave').click(function(){ 
-    resetEventHandlerAndButton(); 
+    resetEventHandler(); 
+    resetButtons();
   });
 
   $('.btn#editEdge').click(function(){ 
     var btn = $(this);
     if($(btn).hasClass('active')) return;
 
-    resetEventHandlerAndButton();
-    stage.children.forEach(function(elem){
-      if(elem.name=="wfGraph_vertex") {
-        elem.on("mousedown", startDrawEdgeHandler);
-      }
-    });
+    resetEventHandler();
+    resetButtons();
+    addEdgeModeEventHandler();
     $(btn).addClass('active');
   });
 
@@ -303,13 +366,9 @@ $(document).ready(function(){
     var btn = $(this);
     if($(btn).hasClass('active')) return;
 
-    resetEventHandlerAndButton();
-    stage.children.forEach(function(elem){
-      if(elem.name=="wfGraph_vertex") {
-        elem.on("pressmove", elem.dragHandler);
-        elem.on("pressup", elem.dropHandler);
-      }
-    });
+    resetEventHandler();
+    resetButtons();
+    addVertexModeEventHandler();
     $(btn).addClass('active');
   });
 });
