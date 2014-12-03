@@ -15,8 +15,8 @@ exports.loadGraph = function (req, res) {
         id    AS source,\
         NULL  AS sink,\
         name  AS label,\
-        posX  AS posX,\
-        posY  AS posY\
+        posX  AS posx,\
+        posY  AS posy\
       FROM tbl_graphV\
       UNION\
       SELECT \
@@ -24,8 +24,8 @@ exports.loadGraph = function (req, res) {
         source  AS source,\
         sink    AS sink,\
         NULL    AS label,\
-        posX  AS posX,\
-        posY  AS posY\
+        NULL    AS posx,\
+        NULL    AS posy\
       FROM tbl_graphE\
     ";
 

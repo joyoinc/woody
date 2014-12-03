@@ -11,7 +11,7 @@ exports.updateTileStatus = function(req, res) {
       return;
     }
 
-    var sqlCmd = "UPDATE  tbl_item i SET status = $2 WHERE i.itemId=$1";
+    var sqlCmd = "UPDATE  tbl_item i SET status = $2 WHERE i.itemid=$1";
 
     client.query(sqlCmd, [id, sid], function(err, result) {
       // call done to release client back to pool

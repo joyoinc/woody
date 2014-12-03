@@ -230,8 +230,7 @@ function drawGraph(vertexes, edges) {
   for(var i=0; i<vertexes.length; i++) {
     elem = vertexes[i];
     drawGraphVertex(elem.source, elem.label,
-        {x:elem.posX,y:posY}
-        //{x:Math.random()*600,y:Math.random()*450}
+        {x:elem.posx,y:elem.posy}
     );
   }
 

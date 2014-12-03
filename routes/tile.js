@@ -8,16 +8,16 @@ exports.getTile = function(req, res) {
       return console.error('error fetching client from pool', err);
     }
     var sqlCmd = " \
-      SELECT  i.itemName AS name, f.accessLink AS link, v.name AS workstat, nxt.nextid AS nextstatid, nxt.nextname AS nextstatname \
+      SELECT  i.itemname AS name, f.accesslink AS link, v.name AS workstat, nxt.nextid AS nextstatid, nxt.nextname AS nextstatname \
       FROM    tbl_item i  \
-              LEFT OUTER JOIN tbl_file f ON (i.thumbnail = f.fileId)  \
+              LEFT OUTER JOIN tbl_file f ON (i.thumbnail = f.fileid)  \
               LEFT OUTER JOIN tbl_graphV v ON (i.status = v.id)  \
               LEFT OUTER JOIN ( \
                 SELECT  e.source AS vid, v.id AS nextid, v.name AS nextname \
                 FROM    tbl_graphE e \
                         JOIN  tbl_graphV v ON(v.id = e.sink) \
               ) nxt ON (nxt.vid = i.status)  \
-      WHERE   i.typeId=1 AND i.itemId=$1 \
+      WHERE   i.typeid=1 AND i.itemid=$1 \
     ";
 
     client.query(sqlCmd, [itemid], function(err, result) {
