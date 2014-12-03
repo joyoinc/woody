@@ -19,3 +19,5 @@ CREATE TABLE cfg_table (
 \i sql/data/2014-10-5.sql
 \i sql/table/2014-11-25.sql
 \i sql/data/2014-11-25.sql
+\i sql/table/2014-12-2.sql
+\i sql/data/2014-12-2.sql

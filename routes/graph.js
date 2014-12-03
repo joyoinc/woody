@@ -9,20 +9,23 @@ exports.loadGraph = function (req, res) {
       return;
     }
 
-    var sqlCmd = "SELECT 'V' * FROM tbl_graphV";
     var sqlCmd = " \
       SELECT \
         'V'   AS type,\
         id    AS source,\
         NULL  AS sink,\
-        name  AS label \
+        name  AS label,\
+        posX  AS posx,\
+        posY  AS posy\
       FROM tbl_graphV\
       UNION\
       SELECT \
         'E'     AS type,\
         source  AS source,\
         sink    AS sink,\
-        NULL    AS label\
+        NULL    AS label,\
+        NULL    AS posx,\
+        NULL    AS posy\
       FROM tbl_graphE\
     ";
 
