@@ -18,3 +18,5 @@ INSERT INTO tbl_graphE(source, sink) VALUES (1, 2);
 INSERT INTO tbl_graphE(source, sink) VALUES (10, 11);
 INSERT INTO tbl_graphE(source, sink) VALUES (11, 2);
 INSERT INTO tbl_graphE(source, sink) VALUES (2, 1);
+
+UPDATE tbl_item SET (status) = (1) WHERE itemid = 3;
