@@ -165,12 +165,19 @@ function delightTargetHandler(evt) {
 
 function removeEdgeHandler(evt) {
   var edge = evt.currentTarget;
-  console.log('remove edge ' + edge.toString());
   stage.removeChild(edge);
 }
 
+function editVertexHandler(evt) {
+  selectedVertex = evt.currentTarget;
+  var str = selectedVertex.configs.label;
+  var id = selectedVertex.vertexId;
+  $('#editVertexModal #label').val(str).attr('vid', id);
+  $('#editVertexModal').modal();
+}
+
 function startDrawEdgeHandler (evt) {
-  sourceVertex = evt.currentTarget;
+  selectedVertex = evt.currentTarget;
   stage.addChild(new createjs.Shape().set({
     x: evt.currentTarget.x,
     y: evt.currentTarget.y,
@@ -188,19 +195,19 @@ function tmpDrawEdgeHandler (evt) {
 }
 
 function endDrawEdgeHandler (evt) {
-  var sinkVertex , targets = stage.getObjectsUnderPoint(stage.mouseX, stage.mouseY);
+  var target , targets = stage.getObjectsUnderPoint(stage.mouseX, stage.mouseY);
   for(var i=0; i<targets.length; i++) {
     if(targets[i].parent!=null && targets[i].parent.name=="wfGraph_vertex") {
-      sinkVertex = targets[i].parent; 
+      target = targets[i].parent; 
       break;
     }
   }
 
   var connection = stage.getChildByName("tmpEdge");
   stage.removeChild(connection);
-  if(sinkVertex != null) {
-    var sourceId = sourceVertex.vertexId;
-    var sinkId = sinkVertex.vertexId;
+  if(target != null) {
+    var sourceId = selectedVertex.vertexId;
+    var sinkId = target.vertexId;
     if(sourceId==sinkId) {
       console.log("can't add loop " + sinkId + " to itself!");
     }
@@ -293,7 +300,7 @@ function addVertexModeEventHandler(elems) {
       elem.on("pressup", elem.dropHandler);
       elem.on("mouseover", highlightTargetHandler);
       elem.on("mouseout", delightTargetHandler);
-      //elem.on("dblclick", removeEdgeHandler);
+      elem.on("dblclick", editVertexHandler);
     }
   });
 }
@@ -333,6 +340,10 @@ $(document).ready(function(){
     var graph = {vertexes:[],edges:[]};
     stage.children.forEach(function(elem){
       console.log('graph element: '+ elem.toString());
+      if(elem.name=="wfGraph_vertex") {
+        graph.vertexes.push({id:elem.vertexId, name:elem.configs.label,
+          posx:elem.x, posy:elem.y});
+      }
       if(elem.name=="wfGraph_edge") {
         graph.edges.push({source:elem.sourceVertex.vertexId, sink:elem.sinkVertex.vertexId});
       }
@@ -350,6 +361,40 @@ $(document).ready(function(){
         }, 500);
       }
     });
+  });
+
+  $('#editVertexModal .btn#add').click(function(){ 
+    var vertexId = 0;
+    for(var i=0; i<stage.children.length; i++) {
+      var elem = stage.children[i];
+      if(elem.name=="wfGraph_vertex" && elem.vertexId > vertexId) {
+        vertexId = elem.vertexId;
+      }
+    }
+    var newVertex = stage.addChild(new GraphVertex( vertexId+1,
+      { label: $('#editVertexModal #label').val() ,
+        pos: {x:Math.random()*600, y:Math.random()*450}  }));
+    addVertexModeEventHandler([newVertex]);
+    setTimeout(function(){ $('button.close').click(); }, 500);
+  });
+
+  $('#editVertexModal .btn#delete').click(function(){ 
+    var todolist = [];
+    stage.children.forEach(function(elem){
+      if(elem.name=="wfGraph_edge" &&
+        (elem.sourceVertex==selectedVertex || elem.sinkVertex==selectedVertex) ) {
+        todolist.push(elem);
+      }
+    });
+    todolist.push(selectedVertex);
+    todolist.forEach(function(elem){ stage.removeChild(elem); });
+    setTimeout(function(){ $('button.close').click(); }, 500);
+  });
+
+  $('#editVertexModal .btn#update').click(function(){ 
+    selectedVertex.configs.label = $('#editVertexModal #label').val();
+    selectedVertex.paint();
+    setTimeout(function(){ $('button.close').click(); }, 500);
   });
 
   $('.btn#preSave').click(function(){ 
