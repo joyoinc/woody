@@ -97,7 +97,9 @@ function handleMouseUp(event) {
 }
 
 function handleMouseDblClick(event) {
-    blur.alpha = 1;
+    blur.alpha = 0;
+    bitmap.filters = [];
+    bitmap.updateCache(0, 0, image.width, image.height);
     stage.update();
 }
 
