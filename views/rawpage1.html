@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>demo</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+<script>
+var records = [
+  { id:'f100108', name:'cgg', age:53, sex:'M', smokeStatus:1, height:'173', weight:'86.42', bmi:'27.9', waist:'102', systolic:'126', diastolic:'86', glucose:'6.9375', cholester:'6.29', triglyceride:'2.96', hdl:'1.11', ldl:'3.83', grains:'62.49', vegetable:'6.44', fruits:'14', poultry:'350', eggs:'50', seafood:'50', beans:'100', dairy:'400', fat:'40', alchol:'15', water:'3000', diabetes:{self:0, family:0}, cvd:{self:0, family:0}, stroke:{self:0, family:0}, hbp:{self:0, family:0}, lungCancer:{self:1, family:0}, },
+  { id:'f100146', name:'ZPP', age:62, sex:'F', smokeStatus:3, height:'175', weight:'79.37', bmi:'25.97', waist:'99', systolic:'136', diastolic:'73', glucose:'5.2922', cholester:'5.89', triglyceride:'1.67', hdl:'1.76', ldl:'2.43', grains:'43.35', vegetable:'10.21', fruits:'15', poultry:'340', eggs:'52', seafood:'60', beans:'101', dairy:'405', fat:'46', alchol:'19', water:'2000', diabetes:{self:0, family:0}, cvd:{self:1, family:0}, stroke:{self:1, family:1}, hbp:{self:0, family:0}, lungCancer:{self:0, family:1}, },
+];
+
+var displayYouWu = function(input) {
+  return input==1 ? '有' : '无';
+}
+
+var updateUI = function(obj) {
+  if(obj==null) {
+    $('h3').text('无法查询到该编号的记录');
+    $('div.CSSTableGenerator').hide();
+  } else {
+    $('h3').text('');
+    /* BEGIN: display data for view */
+    $('#v1').text(obj.name);
+    $('#v2').text(obj.sex=='M' ? '男': '女');
+    $('#v3').text(obj.age);
+    $('#v4').text(obj.id);
+
+    $('#v8').text(obj.smokeStatus==1 ? '吸烟' : obj.smokeStatus==3 ? '已戒烟' : '不吸烟');
+
+    $('#v10').text(obj.height);
+    $('#v11').text(obj.weight);
+    $('#v12').text(obj.bmi);
+    $('#v13').text(obj.waist);
+    $('#v14').text(obj.systolic+'/'+obj.diastolic);
+    $('#v15').text(obj.glucose);
+    $('#v16').text(obj.cholester);
+    $('#v17').text(obj.triglyceride);
+    $('#v18').text(obj.hdl);
+    $('#v19').text(obj.ldl);
+
+    $('#v20').text(obj.grains);
+    $('#v21').text(obj.vegetable);
+    $('#v22').text(obj.fruits);
+    $('#v23').text(obj.poultry);
+    $('#v24').text(obj.eggs);
+    $('#v25').text(obj.seafood);
+    $('#v26').text(obj.beans);
+    $('#v27').text(obj.dairy);
+    $('#v28').text(obj.fat);
+    $('#v29').text(obj.alchol);
+    $('#v30').text(obj.water+'ml');
+
+    $('#v40').text(displayYouWu(obj.diabetes.self));
+    $('#v41').text(displayYouWu(obj.cvd.self));
+    $('#v42').text(displayYouWu(obj.stroke.self));
+    $('#v43').text(displayYouWu(obj.hbp.self));
+    $('#v44').text(displayYouWu(obj.lungCancer.self));
+
+    $('#v50').text(displayYouWu(obj.diabetes.family));
+    $('#v51').text(displayYouWu(obj.cvd.family));
+    $('#v52').text(displayYouWu(obj.stroke.family));
+    $('#v53').text(displayYouWu(obj.hbp.family));
+    $('#v54').text(displayYouWu(obj.lungCancer.family));
+    /* END: display data for view */
+    $('div.CSSTableGenerator').show();
+  }
+  
+}
+
+var update = function(id) {
+  var target = null;
+  for(var i=0; i<records.length; i++) {
+    if(records[i].id == id) {
+      target = records[i];
+      break;
+    }
+  }
+
+  updateUI(target);
+}
+
+$(document).ready(function(){
+  $('input').change(function(){
+    update($(this).val());
+  });
+});
+</script>
+
+<style type="text/css">
+.CSSTableGenerator {
+	margin:0px;padding:0px;
+	width:100%;
+	box-shadow: 10px 10px 5px #888888;
+	border:1px solid #000000;
+	
+	-moz-border-radius-bottomleft:11px;
+	-webkit-border-bottom-left-radius:11px;
+	border-bottom-left-radius:11px;
+	
+	-moz-border-radius-bottomright:11px;
+	-webkit-border-bottom-right-radius:11px;
+	border-bottom-right-radius:11px;
+	
+	-moz-border-radius-topright:11px;
+	-webkit-border-top-right-radius:11px;
+	border-top-right-radius:11px;
+	
+	-moz-border-radius-topleft:11px;
+	-webkit-border-top-left-radius:11px;
+	border-top-left-radius:11px;
+}.CSSTableGenerator table{
+    border-collapse: collapse;
+        border-spacing: 0;
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+}.CSSTableGenerator tr:last-child td:last-child {
+	-moz-border-radius-bottomright:11px;
+	-webkit-border-bottom-right-radius:11px;
+	border-bottom-right-radius:11px;
+}
+.CSSTableGenerator table tr:first-child td:first-child {
+	-moz-border-radius-topleft:11px;
+	-webkit-border-top-left-radius:11px;
+	border-top-left-radius:11px;
+}
+.CSSTableGenerator table tr:first-child td:last-child {
+	-moz-border-radius-topright:11px;
+	-webkit-border-top-right-radius:11px;
+	border-top-right-radius:11px;
+}.CSSTableGenerator tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:11px;
+	-webkit-border-bottom-left-radius:11px;
+	border-bottom-left-radius:11px;
+}.CSSTableGenerator tr:hover td{
+	
+}
+.CSSTableGenerator tr:nth-child(odd){ background-color:#aad4ff; }
+.CSSTableGenerator tr:nth-child(even)    { background-color:#ffffff; }.CSSTableGenerator td{
+	vertical-align:middle;
+	
+	
+	border:1px solid #000000;
+	border-width:0px 1px 1px 0px;
+	text-align:left;
+	padding:7px;
+	font-size:10px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}.CSSTableGenerator tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.CSSTableGenerator tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.CSSTableGenerator tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.CSSTableGenerator tr:first-child td{
+		background:-o-linear-gradient(bottom, #005fbf 5%, #003f7f 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #005fbf), color-stop(1, #003f7f) );
+	background:-moz-linear-gradient( center top, #005fbf 5%, #003f7f 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#005fbf", endColorstr="#003f7f");	background: -o-linear-gradient(top,#005fbf,003f7f);
+
+	background-color:#005fbf;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#ffffff;
+}
+.CSSTableGenerator tr.header td{
+		background:-o-linear-gradient(bottom, #005fbf 5%, #003f7f 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #005fbf), color-stop(1, #003f7f) );
+	background:-moz-linear-gradient( center top, #005fbf 5%, #003f7f 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#005fbf", endColorstr="#003f7f");	background: -o-linear-gradient(top,#005fbf,003f7f);
+
+	background-color:#005fbf;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#ffffff;
+}
+.CSSTableGenerator tr:first-child:hover td{
+	background:-o-linear-gradient(bottom, #005fbf 5%, #003f7f 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #005fbf), color-stop(1, #003f7f) );
+	background:-moz-linear-gradient( center top, #005fbf 5%, #003f7f 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#005fbf", endColorstr="#003f7f");	background: -o-linear-gradient(top,#005fbf,003f7f);
+
+	background-color:#005fbf;
+}
+.CSSTableGenerator tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.CSSTableGenerator tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
+}
+</style>
+</head>
+
+<body>
+<p> 用户编号: <input  /> </p>
+
+<h1>  个人健康信息汇总报告 </h1>
+<h3></h3>
+<div class="CSSTableGenerator" >
+  <table> 
+        <tr>
+          <td> 姓名 </td>
+          <td> 性别 </td>
+          <td> 年龄 </td>
+          <td> 编号 </td>
+        </tr>
+        <tr>
+          <td id=v1> 张莫 </td>
+          <td id=v2> 男 </td>
+          <td id=v3> 60 </td>
+          <td id=v4> 10970 </td>
+        </tr>
+        <tr class="header">
+          <td colspan=2> 吸烟情况 </td>
+          <td colspan=2> 体力活动 </td>
+        </tr>
+        <tr>
+          <td colspan=2 id=v8> 已戒烟 </td>
+          <td colspan=2 > 中等 </td>
+        </tr>
+        <tr class="header">
+          <td> 检查指标 </td>
+          <td> 本次结果（2010-01-09） </td>
+          <td> 上次结果（2009-09-09） </td>
+          <td> 参考值 </td>
+        </tr>
+        <tr>
+          <td> 身高 </td>
+          <td id=v10> 178 </td>
+          <td> 178 </td>
+          <td> - </td>
+        </tr>
+        <tr>
+          <td> 体重 </td>
+          <td id=v11> 82 </td>
+          <td> 83 </td>
+          <td>  </td>
+        </tr>
+        <tr>
+          <td> 体重指数（BMI） </td>
+          <td id=v12> 25.9 </td>
+          <td> 26.2 </td>
+          <td> 18.5&lt;=BMI&lt;24 </td>
+        </tr>
+        <tr>
+          <td> 腰围 </td>
+          <td id=v13> 92 </td>
+          <td> 93 </td>
+          <td> &lt;85cm </td>
+        </tr>
+        <tr>
+          <td> 血压 </td>
+          <td id=v14> 122/72 </td>
+          <td> 135/80 </td>
+          <td> &lt;120/80mmHg </td>
+        </tr>
+        <tr>
+          <td> 空腹血糖 </td>
+          <td id=v15> 6.0 </td>
+          <td> 6.3 </td>
+          <td> &lt;5.6mmol/L </td>
+        </tr>
+        <tr>
+          <td> 总胆固醇 </td>
+          <td id=v16> 5.7 </td>
+          <td> 5.7 </td>
+          <td> &lt;5.18mmol/L </td>
+        </tr>
+        <tr>
+          <td> 甘油三酯 </td>
+          <td id=v17> 2.18 </td>
+          <td> 2.18 </td>
+          <td> &lt;1.7mmol/L </td>
+        </tr>
+        <tr>
+          <td> 高密度脂蛋白胆固醇 </td>
+          <td id=v18> 0.8 </td>
+          <td> 0.8 </td>
+          <td> &gt;=1.04mmol/L </td>
+        </tr>
+        <tr>
+          <td> 低密度脂蛋白胆固醇 </td>
+          <td id=v19> 3.27 </td>
+          <td> 3.27 </td>
+          <td> &lt;3.37mmol/L </td>
+        </tr>
+        <tr class="header">
+          <td rowspan=12> 食物摄入以及参考量 </td>
+          <td> 食物类别 </td>
+          <td> 实际摄入（克/天） </td>
+          <td> 参考摄入（克/天） </td>
+        </tr>
+        <tr>
+          <td> 谷薯杂豆类 </td>
+          <td id=v20> 625 </td>
+          <td> 250~400 </td>
+        <tr>
+          <td> 蔬菜 </td>
+          <td id=v21> 64 </td>
+          <td> 300~500 </td>
+        </tr>
+        <tr>
+          <td> 水果 </td>
+          <td id=v22> 14 </td>
+          <td> 200~400 </td>
+        </tr>
+        <tr>
+          <td> 畜禽肉 </td>
+          <td id=v23> 350 </td>
+          <td> 50~75 </td>
+        </tr>
+        <tr>
+          <td> 蛋类 </td>
+          <td id=v24> 50 </td>
+          <td> 25~50 </td>
+        </tr>
+        <tr>
+          <td> 鱼虾 </td>
+          <td id=v25> 50 </td>
+          <td> 50~100 </td>
+        </tr>
+        <tr>
+          <td> 大豆类及坚果 </td>
+          <td id=v26> 100 </td>
+          <td> 30~50 </td>
+        </tr>
+        <tr>
+          <td> 奶及奶制品 </td>
+          <td id=v27> 400 </td>
+          <td> 300 </td>
+        </tr>
+        <tr>
+          <td> 油脂 </td>
+          <td id=v28> 40 </td>
+          <td> 25~40 </td>
+        </tr>
+        <tr>
+          <td> 酒精摄入量 </td>
+          <td id=v29> 54 </td>
+          <td> &lt;25 </td>
+        </tr>
+        <tr>
+          <td> 饮水 </td>
+          <td id=v30> 3000ml </td>
+          <td> &gt;1200ml </td>
+        </tr>
+        <tr class="header">
+          <td colspan=2> 个人疾病史 </td>
+          <td colspan=2> 家族疾病史 </td>
+        </tr>
+        <tr class="header">
+          <td > 疾病名称 </td>
+          <td > 患病情况 </td>
+          <td > 疾病名称 </td>
+          <td > 患病情况 </td>
+        </tr>
+        <tr>
+          <td> 糖尿病 </td>
+          <td id=v40> 无 </td>
+          <td> 糖尿病 </td>
+          <td id=v50> 有 </td>
+        </tr>
+        <tr>
+          <td> 冠心病 </td>
+          <td id=v41> 无 </td>
+          <td> 冠心病 </td>
+          <td id=v51> 无 </td>
+        </tr>
+        <tr>
+          <td> 中风 </td>
+          <td id=v42> 无 </td>
+          <td> 中风 </td>
+          <td id=v52> 无 </td>
+        </tr>
+        <tr>
+          <td> 高血压 </td>
+          <td id=v43> 无 </td>
+          <td> 高血压 </td>
+          <td id=v53> 有 </td>
+        </tr>
+        <tr>
+          <td> 肺癌 </td>
+          <td id=v44> 无 </td>
+          <td> 肺癌 </td>
+          <td id=v54> 无 </td>
+        </tr>
+  </table> 
+</div>
+</body>
+</html>
