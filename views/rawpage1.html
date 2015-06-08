@@ -6,8 +6,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
 <script>
 var records = [
-  { id:'f100108', name:'cgg', age:53, sex:'M', smokeStatus:1, height:'173', weight:'86.42', bmi:'27.9', waist:'102', systolic:'126', diastolic:'86', glucose:'6.9375', cholester:'6.29', triglyceride:'2.96', hdl:'1.11', ldl:'3.83', grains:'62.49', vegetable:'6.44', fruits:'14', poultry:'350', eggs:'50', seafood:'50', beans:'100', dairy:'400', fat:'40', alchol:'15', water:'3000', diabetes:{self:0, family:0}, cvd:{self:0, family:0}, stroke:{self:0, family:0}, hbp:{self:0, family:0}, lungCancer:{self:1, family:0}, },
-  { id:'f100146', name:'ZPP', age:62, sex:'F', smokeStatus:3, height:'175', weight:'79.37', bmi:'25.97', waist:'99', systolic:'136', diastolic:'73', glucose:'5.2922', cholester:'5.89', triglyceride:'1.67', hdl:'1.76', ldl:'2.43', grains:'43.35', vegetable:'10.21', fruits:'15', poultry:'340', eggs:'52', seafood:'60', beans:'101', dairy:'405', fat:'46', alchol:'19', water:'2000', diabetes:{self:0, family:0}, cvd:{self:1, family:0}, stroke:{self:1, family:1}, hbp:{self:0, family:0}, lungCancer:{self:0, family:1}, },
+  { id:'f100101', name:'李源丰', age:44, sex:'M', examDate:'2015-3-10', smokeStatus:2, height:'172', weight:'73.8', bmi:'24.9', waist:'85', systolic:'108', diastolic:'62', glucose:'4.9999', cholester:'5.19', triglyceride:'1.35', hdl:'1.42', ldl:'3.56', grains:'250', vegetable:'50', fruits:'50', poultry:'200', eggs:'50', seafood:'70', beans:'75', dairy:'200', fat:'38', alchol:'12', water:'2500', diabetes:{self:0, family:0}, cvd:{self:0, family:0}, stroke:{self:0, family:0}, hbp:{self:0, family:0}, lungCancer:{self:0, family:0}, },
+  { id:'f100108', name:'cgg', age:53, sex:'M', examDate:'2015-5-20', smokeStatus:1, height:'173', weight:'86.42', bmi:'27.9', waist:'102', systolic:'126', diastolic:'86', glucose:'6.9375', cholester:'6.29', triglyceride:'2.96', hdl:'1.11', ldl:'3.83', grains:'62.49', vegetable:'6.44', fruits:'14', poultry:'350', eggs:'50', seafood:'50', beans:'100', dairy:'400', fat:'40', alchol:'15', water:'3000', diabetes:{self:0, family:0}, cvd:{self:0, family:0}, stroke:{self:0, family:0}, hbp:{self:0, family:0}, lungCancer:{self:1, family:0}, },
+  { id:'f100146', name:'ZPP', age:62, sex:'F', examDate:'1986-11-24', smokeStatus:3, height:'175', weight:'79.37', bmi:'25.97', waist:'99', systolic:'136', diastolic:'73', glucose:'5.2922', cholester:'5.89', triglyceride:'1.67', hdl:'1.76', ldl:'2.43', grains:'43.35', vegetable:'10.21', fruits:'15', poultry:'340', eggs:'52', seafood:'60', beans:'101', dairy:'405', fat:'46', alchol:'19', water:'2000', diabetes:{self:0, family:0}, cvd:{self:1, family:0}, stroke:{self:1, family:1}, hbp:{self:0, family:0}, lungCancer:{self:0, family:1}, },
 ];
 
 var displayYouWu = function(input) {
@@ -25,6 +26,7 @@ var updateUI = function(obj) {
     $('#v2').text(obj.sex=='M' ? '男': '女');
     $('#v3').text(obj.age);
     $('#v4').text(obj.id);
+    $('#v5').text(obj.examDate);
 
     $('#v8').text(obj.smokeStatus==1 ? '吸烟' : obj.smokeStatus==3 ? '已戒烟' : '不吸烟');
 
@@ -89,8 +91,8 @@ $(document).ready(function(){
 
 <style type="text/css">
 .CSSTableGenerator {
-	margin:0px;padding:0px;
-	width:100%;
+	margin:0 auto;padding:0px;
+	width:61.8%;
 	box-shadow: 10px 10px 5px #888888;
 	border:1px solid #000000;
 	
@@ -145,7 +147,7 @@ $(document).ready(function(){
 	border-width:0px 1px 1px 0px;
 	text-align:left;
 	padding:7px;
-	font-size:10px;
+	font-size:12px;
 	font-family:Arial;
 	font-weight:normal;
 	color:#000000;
@@ -229,7 +231,7 @@ $(document).ready(function(){
         </tr>
         <tr class="header">
           <td> 检查指标 </td>
-          <td> 本次结果（2010-01-09） </td>
+          <td> 本次结果（<span id=v5>2010-01-09</span>） </td>
           <td> 上次结果（2009-09-09） </td>
           <td> 参考值 </td>
         </tr>
