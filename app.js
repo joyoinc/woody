@@ -43,9 +43,11 @@ var routeAPI = require('./routes/_api');
 app.put('/_api/updateTileStatus/:id/:stat', routeAPI.updateTileStatus);
 app.get('/_api/loadGraph', routeGraph.loadGraph);
 
+app.get('/bbd/:year', function(req, res){ res.render("birthday", {year:req.params.year}); });
+
 app.get('/bear-birthday', function(req, res){ res.render("rawpage"); });
 
-app.get('/cxg', function(req, res){ res.render("rawpage1"); });
+app.get('/cxg', function(req, res){ res.render("cxg"); });
 
 var server = app.listen(app.get('port'), function(){
   console.log('Server listening on port ' + server.address().port);
