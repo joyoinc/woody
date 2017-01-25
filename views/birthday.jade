@@ -1,7 +1,15 @@
 case year
   when "2015"
-    include rawpage.html
+    script.
+      var picsrc = "/bearA.jpg";
   when "2016"
-    include bear2016.html
+    script.
+      var picsrc = "/bearB.jpg";
+  when "2017"
+    script.
+      var picsrc = "/bearC.jpg";
   default
-    h1 Happy Birthday !
+    script.
+      var src = "/bear.jpg";
+
+include ca-xiong-xiong.html
